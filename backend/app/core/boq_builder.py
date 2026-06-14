@@ -305,12 +305,10 @@ def build_boq(
                     f"(เดี่ยว {single_count}, คู่ {double_count})"
                 )
 
-            # รวมจำนวนอุปกรณ์ตามขนาดท่อที่จุดวาล์วตั้งอยู่
-            elbow45_by_size: dict[str, int] = {}
-            ballvalve_by_size: dict[str, int] = {}
-            saddle_by_size: dict[str, int] = {}
-            airvalve_by_size: dict[str, int] = {}
-            quad_cap_count = 0
+            # นับจำนวนจุดวาล์วเดี่ยว/คู่ (s/d) - สูตรรวมเป็นเลขเดียวต่อชนิด ห้ามแตกตามขนาดท่อ
+            # ขนาดท่อที่จุดวาล์วตั้งอยู่ใช้ได้แค่เลือกราคา/ชื่อรายการที่เป็นตัวแทน (ไม่ใช่ตัวแบ่งการนับ)
+            size_counts: dict[str, int] = {}
+            s = d = 0
 
             for cluster in clusters:
                 if cluster["type"] == "unknown":
@@ -330,27 +328,30 @@ def build_boq(
 
                 role = valves.nearest_pipe_role(cluster["center"], pipe_entities_by_role)
                 size = plant_pipe_sizes.get(role, {}).get("size", "-") if role else "-"
+                size_counts[size] = size_counts.get(size, 0) + 1
 
-                multiplier = 1 if cluster["type"] == "single" else 2
-                elbow45_by_size[size] = elbow45_by_size.get(size, 0) + 4
-                ballvalve_by_size[size] = ballvalve_by_size.get(size, 0) + multiplier
-                saddle_by_size[size] = saddle_by_size.get(size, 0) + multiplier
-                airvalve_by_size[size] = airvalve_by_size.get(size, 0) + multiplier
-                if cluster["type"] == "double":
-                    quad_cap_count += 1
+                if cluster["type"] == "single":
+                    s += 1
+                else:
+                    d += 1
 
-            for size, qty in elbow45_by_size.items():
-                rows.append(_make_row(_find_price_item(price_table, "ข้องอ45", size), qty))
-            for size, qty in ballvalve_by_size.items():
-                rows.append(_make_row(_find_price_item(price_table, "บอลวาล์ว", size), qty))
-            for size, qty in saddle_by_size.items():
-                rows.append(_make_row(_find_price_item(price_table, "รัดแยก", size), qty))
-            for size, qty in airvalve_by_size.items():
-                rows.append(_make_row(_find_price_item(price_table, "แอร์วาล์ว", size), qty))
-            if quad_cap_count > 0:
+            dominant_size = max(size_counts, key=size_counts.get) if size_counts else "-"
+
+            if s + d > 0:
                 rows.append(
-                    _make_row(_find_price_item(price_table, "สี่ทางฝาครอบ", "2\""), quad_cap_count)
+                    _make_row(_find_price_item(price_table, "ข้องอ45", dominant_size), (s + d) * 4)
                 )
+                rows.append(
+                    _make_row(_find_price_item(price_table, "บอลวาล์ว", dominant_size), s + d * 2)
+                )
+                rows.append(
+                    _make_row(_find_price_item(price_table, "รัดแยก", dominant_size), s + d * 2)
+                )
+                rows.append(
+                    _make_row(_find_price_item(price_table, "แอร์วาล์ว", dominant_size), s + d * 2)
+                )
+            if d > 0:
+                rows.append(_make_row(_find_price_item(price_table, "สี่ทางฝาครอบ", "2\""), d))
 
         # --- พืช (4.7) -----------------------------------------------------
         plant_counts: dict[str, dict] = {}

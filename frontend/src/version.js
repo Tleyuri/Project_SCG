@@ -1,3 +1,3 @@
 // อัปเดตค่านี้ทุกครั้งที่มีการแก้ไข/อัปเดตเว็บ เพื่อให้ผู้ใช้เห็นว่าใช้เวอร์ชันล่าสุดหรือยัง
-export const APP_VERSION = "v1.1.0";
+export const APP_VERSION = "v1.2.0";
 export const APP_VERSION_DATE = "2026-06-14";
