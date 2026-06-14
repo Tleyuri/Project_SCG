@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { APP_VERSION, APP_VERSION_DATE } from "./version";
 import UploadStep from "./components/UploadStep";
 import LayerMappingStep from "./components/LayerMappingStep";
 import PreviewStep from "./components/PreviewStep";
@@ -85,6 +86,9 @@ export default function App() {
         <div>
           <h1>ระบบถอดวัสดุ (BOQ) ระบบน้ำการเกษตรจาก DXF</h1>
           <div className="tagline">อัปโหลด DXF → ตรวจสอบ Layer → ถอดวัสดุ → ดาวน์โหลด Excel</div>
+        </div>
+        <div className="app-version" title={`อัปเดตล่าสุด ${APP_VERSION_DATE}`}>
+          {APP_VERSION}
         </div>
       </header>
 
