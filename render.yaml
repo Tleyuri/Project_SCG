@@ -9,3 +9,5 @@ services:
     envVars:
       - key: ALLOWED_ORIGINS
         value: "*"
+      - key: PYTHON_VERSION
+        value: "3.11.9"
