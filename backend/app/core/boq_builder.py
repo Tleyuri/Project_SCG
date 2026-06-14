@@ -327,7 +327,7 @@ def build_boq(
                     continue
 
                 role = valves.nearest_pipe_role(cluster["center"], pipe_entities_by_role)
-                size = plant_pipe_sizes.get(role, {}).get("size", "-") if role else "-"
+                size = role_sizes.get(role, "-") if role else "-"
                 size_counts[size] = size_counts.get(size, 0) + 1
 
                 if cluster["type"] == "single":
