@@ -36,7 +36,7 @@
     { "material_type": "แอร์วาล์ว", "size": "6\"", "class": "-", "name": "แอร์วาล์ว 6 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
     { "material_type": "สี่ทางฝาครอบ", "size": "2\"", "class": "-", "name": "สี่ทางฝาครอบ-เกษตร เทา 2 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
 
-    { "material_type": "สามทางลด", "size": "2x3/4\"", "class": "เกษตร", "name": "สามทางลด-เกษตร เทา 2x3/4 นิ้ว", "unit": "ชิ้น", "price": 18.80, "mat_code": "", "needs_review": false },
-    { "material_type": "งอ90ลด", "size": "-", "class": "-", "name": "ข้องอ 90° ลด-เกษตร เทา", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true }
+    { "material_type": "สามทางลด", "size": "4x3/4\"", "class": "เกษตร", "name": "สามทางลด-เกษตร เทา 4x3/4 นิ้ว", "unit": "ชิ้น", "price": 18.80, "mat_code": "", "needs_review": true },
+    { "material_type": "ข้องอ90ลด", "size": "4x3/4\"", "class": "เกษตร", "name": "ข้องอ 90° ลด-เกษตร เทา 4x3/4 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true }
   ]
 }

@@ -76,10 +76,11 @@ def test_build_boq_no_duplicate_joints_across_plants(sample_doc):
     layer_mapping, pipe_sizes, price_table, settings = _configs()
     result = boq_builder.build_boq(sample_doc, layer_mapping, pipe_sizes, price_table, settings)
 
+    # ข้อต่อ "งอ90 ลด" ที่ถอดตามเลเยอร์ ต้องเป็นข้อต่อลด อิงท่อย่อย x ท่อเข้าต้น (submain x feeder = 4x3/4")
     elbow_rows_total = 0
     for plant_data in result["plants"].values():
         elbow_rows_total += sum(
-            1 for r in plant_data["rows"] if r["name"] == "ข้องอ 90° ลด-หนา ฟ้า 3/4x1/2 นิ้ว" and r["qty"] == 3
+            1 for r in plant_data["rows"] if r["name"] == "ข้องอ 90° ลด-เกษตร เทา 4x3/4 นิ้ว" and r["qty"] == 3
         )
     assert elbow_rows_total == 1
 

@@ -34,6 +34,24 @@ def _normalize_size(size: str | None) -> str | None:
     return f'{s}"'
 
 
+def _size_token(size: str | None) -> str | None:
+    """แปลงขนาดท่อเป็น token ไม่มีเครื่องหมาย " เช่น '2"' -> '2', None/'-' -> None"""
+    if not size or size == "-":
+        return None
+    return size.rstrip('"').strip()
+
+
+def _reducer_joint_size(role_sizes: dict[str, str]) -> str | None:
+    """ขนาดข้อต่อลด (ข้องอ/สามทางลด/สี่ทางลด) ที่ถอดตามเลเยอร์ - อิงจากท่อย่อย x ท่อเข้าต้น (submain x feeder)"""
+    submain = _size_token(role_sizes.get("submain"))
+    feeder = _size_token(role_sizes.get("feeder"))
+    if submain and feeder:
+        return f'{submain}x{feeder}"'
+    if submain:
+        return f'{submain}"'
+    return None
+
+
 def _find_price_item(price_table: dict, material_type: str, size: str | None = None, klass: str | None = None) -> dict:
     items = price_table.get("items", [])
     norm_size = _normalize_size(size)
@@ -142,6 +160,8 @@ def build_boq(
 
         # entities per role - เก็บไว้ใช้หา nearest pipe สำหรับชุดวาล์วด้วย
         pipe_entities_by_role: dict[str, list] = {}
+        # ขนาดท่อที่ resolve แล้วของแต่ละ role - เก็บไว้ใช้กำหนดขนาดข้อต่อ (ตามเลเยอร์) ของท่อแยก
+        role_sizes: dict[str, str] = {}
 
         for role, layer_name in pipe_layers.items():
             kept, excluded_count = _entities_filtered(doc, layer_name, legend_bbox)
@@ -168,6 +188,8 @@ def build_boq(
                         debug_log.append(
                             f"[{plant_name}] role={role}: ตรวจจับขนาดท่อจาก layer Dim = {detected}"
                         )
+
+            role_sizes[role] = size
 
             if role == "main" and road_entities:
                 normal_len, road_len = pipes.split_length_by_road(kept, road_entities)
@@ -234,6 +256,8 @@ def build_boq(
             )
 
         # --- ข้อต่อแบบ INSERT (4.5 ก) ------------------------------------
+        # ข้อต่อที่ถอดตามเลเยอร์เหล่านี้เป็นข้อต่อลด อิงขนาดท่อย่อย x ท่อเข้าต้น (submain x feeder)
+        joint_size = _reducer_joint_size(role_sizes)
         for layer_name, info in layer_mapping.get("joint_insert_layers", {}).items():
             if info.get("plant") != plant_name:
                 continue
@@ -248,7 +272,7 @@ def build_boq(
             if cnt == 0:
                 continue
             label = info.get("name_th", layer_name)
-            item = _find_price_item(price_table, label)
+            item = _find_price_item(price_table, label, joint_size, "เกษตร")
             rows.append(_make_row(item, cnt, note=f"layer '{layer_name}'"))
             debug_log.append(f"[{plant_name}] layer '{layer_name}': {cnt} ตัว (INSERT/group)")
 
