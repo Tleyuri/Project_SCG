@@ -1,0 +1,67 @@
+:root {
+  --np-blue-dark: #003d7a;
+  --np-blue: #0066b3;
+  --np-blue-light: #e8f1fb;
+  --np-orange: #f7941e;
+  --np-gray: #6b7280;
+  --np-bg: #f4f7fb;
+  --np-border: #d6e3f0;
+  --np-text: #1f2937;
+  --np-success: #2e7d32;
+  --np-warn: #b45309;
+  --np-warn-bg: #fff7e6;
+
+  font-family: "Sarabun", "Noto Sans Thai", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+  color: var(--np-text);
+  background-color: var(--np-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--np-bg);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid var(--np-border);
+  padding: 6px 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+th {
+  background: var(--np-blue-light);
+  color: var(--np-blue-dark);
+  font-weight: 600;
+}
+
+input, select {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 4px 6px;
+  border: 1px solid var(--np-border);
+  border-radius: 4px;
+}
+
+h1, h2, h3 {
+  color: var(--np-blue-dark);
+}

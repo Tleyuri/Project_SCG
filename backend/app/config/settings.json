@@ -1,0 +1,15 @@
+{
+  "pipe_segment_length_m": 4.0,
+  "riser_height_m": 0.5,
+  "riser_pipe_size": "1/2\"",
+  "drawing_unit_to_meter": 1.0,
+  "legend_margin": 5.0,
+  "legend_left_extent": 60.0,
+  "valve_cluster_distance": 8.0,
+  "bowtie_vertex_count": 4,
+  "pipe_size_main": "",
+  "pipe_size_submain": "",
+  "pipe_size_lateral": "",
+  "garden_location": "",
+  "garden_phone": ""
+}
