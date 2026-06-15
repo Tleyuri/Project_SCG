@@ -16,6 +16,7 @@ export default function App() {
   const [config, setConfig] = useState(null); // {layer_mapping, pipe_sizes, price_table, settings}
   const [settings, setSettings] = useState(null);
   const [garden, setGarden] = useState({ location: "", phone: "" });
+  const [resolvedLayerMapping, setResolvedLayerMapping] = useState(null);
   const [boqResult, setBoqResult] = useState(null);
   const [extracting, setExtracting] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -36,12 +37,15 @@ export default function App() {
     }
   }
 
-  async function runExtract() {
+  async function runExtract(layerMapping) {
     if (!session) return;
     setExtracting(true);
     setError(null);
     try {
-      const result = await extractBoq(session.session_id, { settings });
+      const result = await extractBoq(session.session_id, {
+        settings,
+        layer_mapping: layerMapping ?? resolvedLayerMapping,
+      });
       setBoqResult(result);
     } catch (e) {
       setError(e.message);
@@ -50,8 +54,9 @@ export default function App() {
     }
   }
 
-  async function goToPreview() {
-    await runExtract();
+  async function goToPreview(layerMapping) {
+    setResolvedLayerMapping(layerMapping);
+    await runExtract(layerMapping);
     setStep(2);
   }
 
@@ -62,6 +67,7 @@ export default function App() {
     try {
       const blob = await exportBoq(session.session_id, {
         settings,
+        layer_mapping: resolvedLayerMapping,
         garden_location: garden.location,
         garden_phone: garden.phone,
       });
@@ -112,6 +118,7 @@ export default function App() {
           <LayerMappingStep
             layers={session.layers}
             layerMapping={config.layer_mapping}
+            layerAliases={config.layer_aliases}
             onBack={() => setStep(0)}
             onNext={goToPreview}
           />

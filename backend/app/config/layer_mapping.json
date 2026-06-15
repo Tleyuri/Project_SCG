@@ -1,22 +1,22 @@
 {
   "pipe_layers": {
-    "ท่อ": { "plant": "ทุเรียน", "role": "main", "label": "ท่อเมน" },
-    "ท่อย่อย": { "plant": "ทุเรียน", "role": "submain", "label": "ท่อเมนย่อย" },
-    "ท่อแยก": { "plant": "ทุเรียน", "role": "lateral", "label": "ท่อแยก" },
-    "ท่อสรปิงเกอร์": { "plant": "ทุเรียน", "role": "feeder", "label": "ท่อเข้าต้น" }
+    "ท่อ": { "plant": "ทุเรียน", "role": "main", "label": "ท่อเมน", "_type": "main_pipe" },
+    "ท่อย่อย": { "plant": "ทุเรียน", "role": "submain", "label": "ท่อเมนย่อย", "_type": "submain_pipe" },
+    "ท่อแยก": { "plant": "ทุเรียน", "role": "lateral", "label": "ท่อแยก", "_type": "branch_pipe" },
+    "ท่อสรปิงเกอร์": { "plant": "ทุเรียน", "role": "feeder", "label": "ท่อเข้าต้น", "_type": "tree_pipe" }
   },
 
   "sprinkler_layers": {
-    "สปิงเกลอร์": { "plant": "ทุเรียน" }
+    "สปิงเกลอร์": { "plant": "ทุเรียน", "_type": "sprinkler" }
   },
 
   "valve_layers": {
-    "วาร์ล": { "plant": "ทุเรียน" }
+    "วาร์ล": { "plant": "ทุเรียน", "_type": "valve_set" }
   },
 
   "joint_insert_layers": {
-    "สามทางลด": { "name_th": "สามทางลด", "plant": "ทุเรียน" },
-    "งอ90 ลด": { "name_th": "ข้องอ90ลด", "plant": "ทุเรียน" }
+    "สามทางลด": { "name_th": "สามทางลด", "plant": "ทุเรียน", "_type": "reducing_tee" },
+    "งอ90 ลด": { "name_th": "ข้องอ90ลด", "plant": "ทุเรียน", "_type": "reducing_elbow" }
   },
 
   "joint_raw_layers": {
@@ -29,7 +29,7 @@
   "road_layers": ["ถนน"],
 
   "plant_layers": {
-    "ทุเรียน": { "plant": "ทุเรียน", "method": "group" }
+    "ทุเรียน": { "plant": "ทุเรียน", "method": "group", "_type": "plant" }
   },
 
   "dim_layer": "Dim",

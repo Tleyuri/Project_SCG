@@ -75,6 +75,14 @@ def _find_price_item(price_table: dict, material_type: str, size: str | None = N
     }
 
 
+def _valve_note(price_item: dict) -> str:
+    """หมายเหตุสำหรับอุปกรณ์ในชุดวาร์ล (วาล์วเดี่ยว/คู่) - ระบุที่มาว่าเป็นส่วนประกอบของชุดวาร์ล"""
+    base = "ชุดวาร์ล"
+    if price_item.get("needs_review"):
+        return f"{base} (ต้องตรวจสอบ/อัปเดตราคา)"
+    return base
+
+
 def _make_row(price_item: dict, qty: float, note: str = "") -> dict:
     price = price_item.get("price", 0) or 0
     return {
@@ -338,20 +346,20 @@ def build_boq(
             dominant_size = max(size_counts, key=size_counts.get) if size_counts else "-"
 
             if s + d > 0:
-                rows.append(
-                    _make_row(_find_price_item(price_table, "ข้องอ45", dominant_size), (s + d) * 4)
-                )
-                rows.append(
-                    _make_row(_find_price_item(price_table, "บอลวาล์ว", dominant_size), s + d * 2)
-                )
-                rows.append(
-                    _make_row(_find_price_item(price_table, "รัดแยก", dominant_size), s + d * 2)
-                )
-                rows.append(
-                    _make_row(_find_price_item(price_table, "แอร์วาล์ว", dominant_size), s + d * 2)
-                )
+                item = _find_price_item(price_table, "ข้องอ45", dominant_size)
+                rows.append(_make_row(item, (s + d) * 4, note=_valve_note(item)))
+
+                item = _find_price_item(price_table, "บอลวาล์ว", dominant_size)
+                rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
+
+                item = _find_price_item(price_table, "รัดแยก", dominant_size)
+                rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
+
+                item = _find_price_item(price_table, "แอร์วาล์ว", dominant_size)
+                rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
             if d > 0:
-                rows.append(_make_row(_find_price_item(price_table, "สี่ทางฝาครอบ", "2\""), d))
+                item = _find_price_item(price_table, "สี่ทางฝาครอบ", "2\"")
+                rows.append(_make_row(item, d, note=_valve_note(item)))
 
         # --- พืช (4.7) -----------------------------------------------------
         plant_counts: dict[str, dict] = {}

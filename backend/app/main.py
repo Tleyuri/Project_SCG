@@ -99,6 +99,7 @@ async def upload_dxf(file: UploadFile = File(...)):
 def get_config():
     return {
         "layer_mapping": config_loader.load_layer_mapping(),
+        "layer_aliases": config_loader.load_layer_aliases(),
         "pipe_sizes": config_loader.load_pipe_sizes(),
         "price_table": config_loader.load_price_table(),
         "settings": config_loader.load_settings(),
@@ -138,7 +139,11 @@ def get_layers(session_id: str):
 def _build(session_id: str, req: ExtractRequest):
     doc = _load_doc(session_id)
 
-    layer_mapping = _merge(config_loader.load_layer_mapping(), req.layer_mapping)
+    # layer_mapping: ถ้าผู้ใช้ส่ง mapping มา ให้ใช้ทั้งชุด (ไม่ merge กับ config เดิม)
+    # เพราะ frontend จะส่ง mapping ที่ rename key ของ layer ตามที่ผู้ใช้ยืนยันแล้วทั้งหมด
+    # การ merge แบบ key-by-key จะทำให้ key เดิมใน config (เช่น "ท่อ") ยังหลงเหลืออยู่
+    # ถ้าบังเอิญตรงกับ layer จริงในไฟล์ อาจถูกนับซ้ำกับ key ที่ rename ใหม่
+    layer_mapping = req.layer_mapping if req.layer_mapping else config_loader.load_layer_mapping()
     pipe_sizes = _merge(config_loader.load_pipe_sizes(), req.pipe_sizes)
     price_table = _merge(config_loader.load_price_table(), req.price_table)
     settings = _merge(config_loader.load_settings(), req.settings)

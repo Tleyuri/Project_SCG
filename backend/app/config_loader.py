@@ -36,6 +36,10 @@ def save_layer_mapping(data: dict) -> None:
     _save("layer_mapping.json", data)
 
 
+def load_layer_aliases() -> dict:
+    return _load("layer_aliases.json")
+
+
 def load_pipe_sizes() -> dict:
     return _load("pipe_sizes.json")
 

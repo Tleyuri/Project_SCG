@@ -1,3 +1,5 @@
+import copy
+
 from app import config_loader
 from app.core import boq_builder, excel_export
 
@@ -63,6 +65,7 @@ def test_build_boq_valve_clusters(sample_doc):
     rows = result["plants"]["ทุเรียน"]["rows"]
     elbow45 = next(r for r in rows if "ข้องอ 45" in r["name"])
     ballvalve = next(r for r in rows if "บอลวาล์ว" in r["name"])
+    saddle = next(r for r in rows if "รัดแยก" in r["name"])
     quad_cap = next(r for r in rows if "สี่ทางฝาครอบ" in r["name"])
 
     # 1 เดี่ยว (x4) + 1 คู่ (x4) = 8
@@ -70,6 +73,15 @@ def test_build_boq_valve_clusters(sample_doc):
     # 1 เดี่ยว (x1) + 1 คู่ (x2) = 3
     assert ballvalve["qty"] == 3
     assert quad_cap["qty"] == 1
+
+    # อุปกรณ์ในชุดวาร์ลต้องมีหมายเหตุ "ชุดวาร์ล" (ราคายืนยันแล้ว -> ไม่มีข้อความต้องตรวจสอบต่อท้าย)
+    assert elbow45["note"] == "ชุดวาร์ล"
+    # บอลวาล์วขนาดนี้ยังไม่มีราคา (needs_review) -> หมายเหตุต้องรวมข้อความเตือนด้วย
+    assert ballvalve["note"].startswith("ชุดวาร์ล")
+    assert "ต้องตรวจสอบ" in ballvalve["note"]
+    # รัดแยก ยังไม่มีราคา (needs_review) -> หมายเหตุต้องรวมข้อความเตือนด้วย
+    assert saddle["note"].startswith("ชุดวาร์ล")
+    assert "ต้องตรวจสอบ" in saddle["note"]
 
 
 def test_build_boq_no_duplicate_joints_across_plants(sample_doc):
@@ -83,6 +95,22 @@ def test_build_boq_no_duplicate_joints_across_plants(sample_doc):
             1 for r in plant_data["rows"] if r["name"] == "ข้องอ 90° ลด-เกษตร เทา 4x3/4 นิ้ว" and r["qty"] == 3
         )
     assert elbow_rows_total == 1
+
+
+def test_build_boq_layer_mapping_full_replace_no_stale_keys(sample_doc):
+    layer_mapping, pipe_sizes, price_table, settings = _configs()
+
+    # จำลองการ rename layer ของชุดวาล์วจาก "วาร์ล" (ใน sample_doc) -> "วาล์ว" (ไม่มีจริงในไฟล์)
+    # เหมือนกรณี frontend ส่ง layer_mapping ที่ผู้ใช้ยืนยัน mapping ใหม่มาทั้งชุด (ไม่ merge กับ config เดิม)
+    renamed = copy.deepcopy(layer_mapping)
+    renamed["valve_layers"]["วาล์ว"] = renamed["valve_layers"].pop("วาร์ล")
+
+    result = boq_builder.build_boq(sample_doc, renamed, pipe_sizes, price_table, settings)
+    rows = result["plants"]["ทุเรียน"]["rows"]
+
+    # ไม่ควรมีแถวชุดวาร์ลเหลืออยู่ เพราะ "วาร์ล" ถูก rename ออกจาก mapping ไปแล้ว
+    # และ "วาล์ว" ไม่มี layer จริงในไฟล์ (ต้องไม่มีการ fallback ไปอ่าน "วาร์ล" อีก)
+    assert not any(r.get("note", "").startswith("ชุดวาร์ล") for r in rows)
 
 
 def test_excel_export_builds_workbook(sample_doc):
