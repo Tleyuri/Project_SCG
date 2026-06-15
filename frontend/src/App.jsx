@@ -139,7 +139,7 @@ export default function App() {
         {step === 2 && (
           <div className="toolbar">
             <span className="muted">ปรับค่าด้านบนแล้วกดคำนวณใหม่หากต้องการ</span>
-            <button className="btn secondary" onClick={runExtract} disabled={extracting}>
+            <button className="btn secondary" onClick={() => runExtract()} disabled={extracting}>
               {extracting ? "กำลังคำนวณ..." : "คำนวณใหม่"}
             </button>
           </div>
