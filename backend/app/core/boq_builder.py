@@ -129,11 +129,19 @@ def build_boq(
 
     if legend_bbox_override is not None:
         legend_bbox = legend_bbox_override
+        debug_log.append(f"legend_bbox (override) = {legend_bbox}")
     else:
-        legend_bbox = legend.compute_legend_bbox(
-            dim_entities, margin=legend_margin, left_extent=legend_left_extent
-        )
-    debug_log.append(f"legend_bbox = {legend_bbox}")
+        # ลองหา gap ใน CIRCLE positions ก่อน (แม่นกว่าสำหรับไฟล์ที่ Dim กระจายทั่วแบบ)
+        legend_bbox = legend.detect_legend_cutoff_by_gap(doc)
+        if legend_bbox is not None:
+            debug_log.append(
+                f"legend_bbox (gap method) x > {legend_bbox[0]:.1f}"
+            )
+        else:
+            legend_bbox = legend.compute_legend_bbox(
+                dim_entities, margin=legend_margin, left_extent=legend_left_extent
+            )
+            debug_log.append(f"legend_bbox (Dim method) = {legend_bbox}")
 
     # ข้อความ Dim ที่อยู่นอก legend - ใช้ตรวจจับขนาดท่อ (เมน/ย่อย/แยก) เป็นค่าเริ่มต้น
     dim_kept, _ = legend.filter_legend(dim_entities, legend_bbox)
