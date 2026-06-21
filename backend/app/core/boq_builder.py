@@ -42,7 +42,7 @@ def _size_token(size: str | None) -> str | None:
 
 
 def _reducer_joint_size(role_sizes: dict[str, str]) -> str | None:
-    """ขนาดข้อต่อลด (ข้องอ/สามทางลด/สี่ทางลด) ที่ถอดตามเลเยอร์ - อิงจากท่อย่อย x ท่อเข้าต้น (submain x feeder)"""
+    """fallback: ขนาดข้อต่อลดจากท่อย่อย x ท่อเข้าต้น (submain x feeder)"""
     submain = _size_token(role_sizes.get("submain"))
     feeder = _size_token(role_sizes.get("feeder"))
     if submain and feeder:
@@ -50,6 +50,18 @@ def _reducer_joint_size(role_sizes: dict[str, str]) -> str | None:
     if submain:
         return f'{submain}"'
     return None
+
+
+def _branch_fitting_size(role_sizes: dict[str, str], entry_type: str) -> str | None:
+    """ขนาดข้อต่อ INSERT (สามทางลด/สี่ทาง/งอ90ลด) ตามรูปแบบท่อเข้าต้น
+    straight → ท่อแยก × 3/4"   (เช่น 2x3/4")
+    y_branch → ท่อแยก × 1/2"   (เช่น 2x1/2")
+    """
+    branch = _size_token(role_sizes.get("lateral"))  # ท่อแยก
+    if not branch:
+        return _reducer_joint_size(role_sizes)  # fallback เดิม
+    sub = "3/4" if entry_type == "straight" else "1/2"
+    return f'{branch}x{sub}"'
 
 
 def _find_price_item(price_table: dict, material_type: str, size: str | None = None, klass: str | None = None) -> dict:
@@ -282,10 +294,17 @@ def build_boq(
                         note="แบบ 3 ทางวาย",
                     )
                 )
+                rows.append(
+                    _make_row(
+                        _find_price_item(price_table, "ข้องอ45", '1/2"'),
+                        sprinkler_count,
+                        note="แบบ 3 ทางวาย",
+                    )
+                )
 
         # --- ข้อต่อแบบ INSERT (4.5 ก) ------------------------------------
-        # ข้อต่อที่ถอดตามเลเยอร์เหล่านี้เป็นข้อต่อลด อิงขนาดท่อย่อย x ท่อเข้าต้น (submain x feeder)
-        joint_size = _reducer_joint_size(role_sizes)
+        # ขนาด = ท่อแยก × 3/4" (straight) หรือ × 1/2" (y_branch)
+        joint_size = _branch_fitting_size(role_sizes, entry_type)
         for layer_name, info in layer_mapping.get("joint_insert_layers", {}).items():
             if info.get("plant") != plant_name:
                 continue
