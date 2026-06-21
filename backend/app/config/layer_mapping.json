@@ -3,7 +3,9 @@
     "ท่อ": { "plant": "ทุเรียน", "role": "main", "label": "ท่อเมน", "_type": "main_pipe" },
     "ท่อย่อย": { "plant": "ทุเรียน", "role": "submain", "label": "ท่อเมนย่อย", "_type": "submain_pipe" },
     "ท่อแยก": { "plant": "ทุเรียน", "role": "lateral", "label": "ท่อแยก", "_type": "branch_pipe" },
-    "ท่อสรปิงเกอร์": { "plant": "ทุเรียน", "role": "feeder", "label": "ท่อเข้าต้น", "_type": "tree_pipe" }
+    "ท่อสรปิงเกอร์": { "plant": "ทุเรียน", "role": "feeder", "label": "ท่อเข้าต้น", "_type": "tree_pipe" },
+    "ท่อ3นิ้ว": { "plant": "ทุเรียน", "role": "submain3", "label": "ท่อย่อย 3 นิ้ว", "_type": "sub_pipe_3" },
+    "ประตูน้ำ": { "plant": "ทุเรียน", "role": "gate", "label": "ท่อประตูน้ำ", "_type": "gate_pipe" }
   },
 
   "sprinkler_layers": {

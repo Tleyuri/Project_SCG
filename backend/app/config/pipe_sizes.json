@@ -1,9 +1,11 @@
 {
   "_comment": "ขนาด/Class ของแต่ละ role ต่อพืช - ผู้ใช้แก้ไขได้ในหน้าตั้งค่า เนื่องจากไม่สามารถอ่านขนาดจากชื่อ layer ได้โดยตรง",
   "ทุเรียน": {
-    "main":    { "size": "6\"",   "class": "8.5" },
-    "submain": { "size": "4\"",   "class": "8.5" },
-    "lateral": { "size": "2\"",   "class": "เกษตร" },
-    "feeder":  { "size": "3/4\"", "class": "เกษตร" }
+    "main":     { "size": "6\"",   "class": "8.5" },
+    "submain":  { "size": "4\"",   "class": "8.5" },
+    "submain3": { "size": "3\"",   "class": "8.5" },
+    "lateral":  { "size": "2\"",   "class": "เกษตร" },
+    "feeder":   { "size": "3/4\"", "class": "เกษตร" },
+    "gate":     { "size": "6\"",   "class": "8.5" }
   }
 }

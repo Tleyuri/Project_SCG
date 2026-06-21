@@ -23,6 +23,32 @@ def count_groups_for_layer(groups: dict[str, list], layer_name: str) -> int:
     return count
 
 
+_LAYER0_BLOCK_ALIASES: dict[str, list[str]] = {
+    "สามทางลด":     ["สามทางลด", "สามทาง ลด", "สามทาง_ลด", "3wayR", "tee_reduce"],
+    "สี่ทางลด":     ["สี่ทาง ลด", "สี่ทางลด", "4way_reduce"],
+    "สี่ทางฝาครอบ": ["สี่ทางฝาครอบ", "4way_cap", "สี่ทาง_ฝา"],
+    "ข้องอ90ลด":    ["งอ90 ลด", "งอ90ลด", "งอ90_ลด", "elbow_reduce", "ข้องอ90 ลด"],
+}
+
+
+def count_layer0_blocks(entities: Iterable) -> dict[str, int]:
+    """นับ INSERT blocks ใน layer 0 แยกตามชื่อ block (ข้อต่อที่ซ่อนอยู่ใน default layer)
+
+    คืน {name_th: count} — ใช้ name_th เป็น key เพื่อ lookup ราคาได้ตรงทันที
+    """
+    result: dict[str, int] = {}
+    for e in entities:
+        if e.dxftype() != "INSERT":
+            continue
+        block_name = e.dxf.name
+        block_lower = block_name.lower()
+        for fitting_type, aliases in _LAYER0_BLOCK_ALIASES.items():
+            if block_name in aliases or block_lower in (a.lower() for a in aliases):
+                result[fitting_type] = result.get(fitting_type, 0) + 1
+                break
+    return result
+
+
 def raw_line_warning(layer_name: str, entities: Iterable, label: str | None = None) -> dict:
     """(ค) สร้างคำเตือนสำหรับ layer ข้อต่อที่วาดเป็นเส้นดิบ - ห้ามเดาจำนวน
 

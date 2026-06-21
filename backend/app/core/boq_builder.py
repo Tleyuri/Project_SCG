@@ -160,6 +160,7 @@ def build_boq(
         plants_set.add(info["plant"])
 
     result_plants: dict[str, Any] = {}
+    _layer0_fittings_claimed = False  # layer 0 blocks นับครั้งเดียว ไม่ซ้ำหลายพืช
 
     for plant_name in plants_set:
         rows: list[dict] = []
@@ -284,6 +285,21 @@ def build_boq(
             rows.append(_make_row(item, cnt, note=f"layer '{layer_name}'"))
             debug_log.append(f"[{plant_name}] layer '{layer_name}': {cnt} ตัว (INSERT/group)")
 
+        # --- ข้อต่อจาก layer 0 (auto-detect จาก block name) ----------------
+        # ไฟล์บางแบบวางข้อต่อทั้งหมดไว้ใน layer 0 โดยแยกประเภทด้วยชื่อ block
+        if not _layer0_fittings_claimed:
+            _l0_entities = dxf_reader.entities_by_layer(doc, "0")
+            _l0_kept, _ = legend.filter_legend(_l0_entities, legend_bbox)
+            _l0_counts = joints.count_layer0_blocks(_l0_kept)
+            if _l0_counts:
+                _layer0_fittings_claimed = True
+                for _name_th, _count in _l0_counts.items():
+                    _item = _find_price_item(price_table, _name_th, joint_size, "เกษตร")
+                    rows.append(_make_row(_item, _count, note=f"block '{_name_th}' ใน layer 0"))
+                    debug_log.append(
+                        f"[{plant_name}] layer 0 block '{_name_th}': {_count} ตัว"
+                    )
+
         # --- ข้อต่อแบบเส้นดิบ (4.5 ค) - แจ้งเตือนเท่านั้น ------------------
         for layer_name, info in layer_mapping.get("joint_raw_layers", {}).items():
             if info.get("plant") != plant_name:
@@ -297,69 +313,93 @@ def build_boq(
             warnings.append(joints.raw_line_warning(layer_name, kept, info.get("name_th")))
 
         # --- ชุดวาล์ว (4.6) ------------------------------------------------
+        # ลำดับการตรวจ: (1) bowtie LWPOLYLINE, (2) centroid LWPOLYLINE, (3) CIRCLE ใน layer 0
+        _valve_clusters: list[dict] = []
+        _valve_source = "-"
+
         for layer_name, info in layer_mapping.get("valve_layers", {}).items():
             if info["plant"] != plant_name:
                 continue
             entities = dxf_reader.entities_by_layer(doc, layer_name)
             kept, _ = legend.filter_legend(entities, legend_bbox)
             bowties = valves.find_bowties(kept, vertex_count=settings.get("bowtie_vertex_count", 4))
-            clusters = valves.classify_valve_clusters(bowties, valve_cluster_distance)
+            if bowties:
+                clusters = valves.classify_valve_clusters(bowties, valve_cluster_distance)
+            else:
+                # fallback: centroid clustering (สำหรับ symbol ที่ไม่ใช่ bowtie เช่น แอร์วาว)
+                polys = [e for e in kept if e.dxftype() == "LWPOLYLINE"]
+                clusters = valves.classify_poly_centroid_clusters(polys, valve_cluster_distance)
+            _valve_clusters.extend(clusters)
+            _valve_source = layer_name
 
-            single_count = sum(1 for c in clusters if c["type"] == "single")
-            double_count = sum(1 for c in clusters if c["type"] == "double")
-            if clusters:
+        # fallback: CIRCLE ใน layer 0 (ไฟล์ที่ไม่มี layer วาล์วเลย)
+        if not _valve_clusters:
+            _l0_all = dxf_reader.entities_by_layer(doc, "0")
+            _l0_kept, _ = legend.filter_legend(_l0_all, legend_bbox)
+            _circles = [e for e in _l0_kept if e.dxftype() == "CIRCLE"]
+            if _circles:
+                _valve_clusters = valves.classify_circle_clusters(
+                    _circles,
+                    cluster_tolerance=settings.get("valve_circle_tolerance", 15.0),
+                )
+                _valve_source = "layer 0 (CIRCLE)"
                 debug_log.append(
-                    f"[{plant_name}] layer '{layer_name}': ชุดวาล์ว {len(clusters)} จุด "
-                    f"(เดี่ยว {single_count}, คู่ {double_count})"
+                    f"[{plant_name}] valve fallback: {len(_circles)} circles "
+                    f"→ {len(_valve_clusters)} clusters"
                 )
 
-            # นับจำนวนจุดวาล์วเดี่ยว/คู่ (s/d) - สูตรรวมเป็นเลขเดียวต่อชนิด ห้ามแตกตามขนาดท่อ
-            # ขนาดท่อที่จุดวาล์วตั้งอยู่ใช้ได้แค่เลือกราคา/ชื่อรายการที่เป็นตัวแทน (ไม่ใช่ตัวแบ่งการนับ)
-            size_counts: dict[str, int] = {}
-            s = d = 0
+        # นับจำนวนจุดวาล์วเดี่ยว/คู่ (s/d) - สูตรรวมเป็นเลขเดียวต่อชนิด ห้ามแตกตามขนาดท่อ
+        size_counts: dict[str, int] = {}
+        s = d = 0
 
-            for cluster in clusters:
-                if cluster["type"] == "unknown":
-                    warnings.append(
-                        {
-                            "layer": layer_name,
-                            "label": "วาล์ว",
-                            "message": (
-                                f"พบกลุ่มนาฬิกาทรายซ้อนกัน {cluster['count']} อันที่ตำแหน่ง "
-                                f"{cluster['center']} (คาดว่าเป็นวาล์วเดี่ยวหรือคู่เท่านั้น) "
-                                "กรุณาตรวจสอบด้วยตนเอง"
-                            ),
-                            "countable": False,
-                        }
-                    )
-                    continue
+        for cluster in _valve_clusters:
+            if cluster["type"] == "unknown":
+                warnings.append(
+                    {
+                        "layer": _valve_source,
+                        "label": "วาล์ว",
+                        "message": (
+                            f"พบกลุ่มสัญลักษณ์วาล์วซ้อนกัน {cluster['count']} อันที่ตำแหน่ง "
+                            f"{cluster['center']} (คาดว่าเป็นวาล์วเดี่ยวหรือคู่เท่านั้น) "
+                            "กรุณาตรวจสอบด้วยตนเอง"
+                        ),
+                        "countable": False,
+                    }
+                )
+                continue
 
-                role = valves.nearest_pipe_role(cluster["center"], pipe_entities_by_role)
-                size = role_sizes.get(role, "-") if role else "-"
-                size_counts[size] = size_counts.get(size, 0) + 1
+            role = valves.nearest_pipe_role(cluster["center"], pipe_entities_by_role)
+            size = role_sizes.get(role, "-") if role else "-"
+            size_counts[size] = size_counts.get(size, 0) + 1
 
-                if cluster["type"] == "single":
-                    s += 1
-                else:
-                    d += 1
+            if cluster["type"] == "single":
+                s += 1
+            else:
+                d += 1
 
-            dominant_size = max(size_counts, key=size_counts.get) if size_counts else "-"
+        if _valve_clusters:
+            debug_log.append(
+                f"[{plant_name}] ชุดวาล์ว ({_valve_source}): {len(_valve_clusters)} จุด "
+                f"(เดี่ยว {s}, คู่ {d})"
+            )
 
-            if s + d > 0:
-                item = _find_price_item(price_table, "ข้องอ45", dominant_size)
-                rows.append(_make_row(item, (s + d) * 4, note=_valve_note(item)))
+        dominant_size = max(size_counts, key=size_counts.get) if size_counts else "-"
 
-                item = _find_price_item(price_table, "บอลวาล์ว", dominant_size)
-                rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
+        if s + d > 0:
+            item = _find_price_item(price_table, "ข้องอ45", dominant_size)
+            rows.append(_make_row(item, (s + d) * 4, note=_valve_note(item)))
 
-                item = _find_price_item(price_table, "รัดแยก", dominant_size)
-                rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
+            item = _find_price_item(price_table, "บอลวาล์ว", dominant_size)
+            rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
 
-                item = _find_price_item(price_table, "แอร์วาล์ว", dominant_size)
-                rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
-            if d > 0:
-                item = _find_price_item(price_table, "สี่ทางฝาครอบ", "2\"")
-                rows.append(_make_row(item, d, note=_valve_note(item)))
+            item = _find_price_item(price_table, "รัดแยก", dominant_size)
+            rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
+
+            item = _find_price_item(price_table, "แอร์วาล์ว", dominant_size)
+            rows.append(_make_row(item, s + d * 2, note=_valve_note(item)))
+        if d > 0:
+            item = _find_price_item(price_table, "สี่ทางฝาครอบ", "2\"")
+            rows.append(_make_row(item, d, note=_valve_note(item)))
 
         # --- พืช (4.7) -----------------------------------------------------
         plant_counts: dict[str, dict] = {}

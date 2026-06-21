@@ -128,6 +128,56 @@ def _point_to_segment_distance(p, a, b) -> float:
     return math.hypot(px - cx, py - cy)
 
 
+def classify_poly_centroid_clusters(polys: list, max_dist: float) -> list[dict]:
+    """จัดกลุ่ม LWPOLYLINE ด้วย centroid clustering (fallback สำหรับ valve symbol ที่ไม่ใช่ bowtie เช่น แอร์วาว)
+
+    ใช้เมื่อ find_bowties() ไม่พบนาฬิกาทรายเลย แต่มี LWPOLYLINE อื่นใน layer วาล์ว
+    """
+    centroids = []
+    for poly in polys:
+        pts = _polyline_points(poly)
+        if not pts:
+            continue
+        x = sum(p[0] for p in pts) / len(pts)
+        y = sum(p[1] for p in pts) / len(pts)
+        centroids.append((x, y))
+    if not centroids:
+        return []
+    clusters = cluster_points(centroids, max_dist)
+    results = []
+    for cluster_idx in clusters:
+        size = len(cluster_idx)
+        cx = sum(centroids[i][0] for i in cluster_idx) / size
+        cy = sum(centroids[i][1] for i in cluster_idx) / size
+        valve_type = "single" if size == 1 else "double" if size == 2 else "unknown"
+        results.append({"type": valve_type, "count": size, "center": (cx, cy)})
+    return results
+
+
+def classify_circle_clusters(circles: list, cluster_tolerance: float = 15.0) -> list[dict]:
+    """จัดกลุ่ม CIRCLE entities เพื่อนับชุดวาล์ว (fallback เมื่อไม่มี layer วาล์วในไฟล์)
+
+    ใช้กับ CIRCLE ใน layer 0 ที่ช่างวาดแทน valve symbol:
+    - 1 วง = วาล์วเดี่ยว
+    - 2 วงใกล้กัน (< cluster_tolerance) = วาล์วคู่
+    """
+    centers = []
+    for c in circles:
+        pt = c.dxf.center
+        centers.append((pt.x, pt.y))
+    if not centers:
+        return []
+    clusters = cluster_points(centers, cluster_tolerance)
+    results = []
+    for cluster_idx in clusters:
+        size = len(cluster_idx)
+        cx = sum(centers[i][0] for i in cluster_idx) / size
+        cy = sum(centers[i][1] for i in cluster_idx) / size
+        valve_type = "single" if size == 1 else "double" if size >= 2 else "unknown"
+        results.append({"type": valve_type, "count": size, "center": (cx, cy)})
+    return results
+
+
 def nearest_pipe_role(
     center: tuple[float, float], pipe_entities_by_role: dict[str, list]
 ) -> str | None:

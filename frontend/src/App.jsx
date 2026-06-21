@@ -20,6 +20,7 @@ export default function App() {
   const [boqResult, setBoqResult] = useState(null);
   const [extracting, setExtracting] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [progressInfo, setProgressInfo] = useState({ pct: 0, label: "" });
 
   async function handleUploaded(data) {
     setSession(data);
@@ -40,15 +41,19 @@ export default function App() {
   async function runExtract(layerMapping) {
     if (!session) return;
     setExtracting(true);
+    setProgressInfo({ pct: 30, label: "กำลังวิเคราะห์ไฟล์ DXF..." });
     setError(null);
     try {
+      setProgressInfo({ pct: 60, label: "กำลังถอดวัสดุ..." });
       const result = await extractBoq(session.session_id, {
         settings,
         layer_mapping: layerMapping ?? resolvedLayerMapping,
       });
       setBoqResult(result);
+      setProgressInfo({ pct: 100, label: "เสร็จแล้ว!" });
     } catch (e) {
       setError(e.message);
+      setProgressInfo({ pct: 0, label: "" });
     } finally {
       setExtracting(false);
     }
@@ -124,7 +129,25 @@ export default function App() {
           />
         )}
 
-        {step === 1 && extracting && <div className="card">กำลังถอดวัสดุ...</div>}
+        {extracting && (
+          <div className="card" style={{ padding: "16px 20px" }}>
+            <div style={{ fontSize: 14, color: "#374151" }}>{progressInfo.label}</div>
+            <div style={{ background: "#e5e7eb", borderRadius: 8, height: 12, marginTop: 8, overflow: "hidden" }}>
+              <div
+                style={{
+                  background: "#16a34a",
+                  height: "100%",
+                  borderRadius: 8,
+                  width: progressInfo.pct + "%",
+                  transition: "width 0.4s ease",
+                }}
+              />
+            </div>
+            <div style={{ fontSize: 12, color: "#6b7280", marginTop: 4, textAlign: "right" }}>
+              {progressInfo.pct}%
+            </div>
+          </div>
+        )}
 
         {step === 2 && settings && (
           <SettingsPanel
