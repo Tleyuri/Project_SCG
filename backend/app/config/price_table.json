@@ -4,39 +4,315 @@
     "note": "ราคาเปลี่ยนตามรอบ - แก้ไขได้จากหน้าตั้งค่า รายการที่ price = 0 และ needs_review = true ต้องกรอกราคาเอง"
   },
   "items": [
-    { "material_type": "ท่อประปา", "size": "1/2\"", "class": "8.5", "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 1/2 นิ้ว", "unit": "ท่อน", "price": 50.50, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อประปา", "size": "2\"",   "class": "8.5", "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 2 นิ้ว",   "unit": "ท่อน", "price": 216.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อประปา", "size": "3\"",   "class": "8.5", "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 3 นิ้ว",   "unit": "ท่อน", "price": 474.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อประปา", "size": "4\"",   "class": "8.5", "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 4 นิ้ว",   "unit": "ท่อน", "price": 768.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อประปา", "size": "6\"",   "class": "8.5", "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 6 นิ้ว",   "unit": "ท่อน", "price": 1630.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อประปา", "size": "4\"",   "class": "13.5", "name": "PVC ท่อประปา SCG ชั้น13.5 ขนาด 4 นิ้ว", "unit": "ท่อน", "price": 1160.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อประปา", "size": "6\"",   "class": "13.5", "name": "PVC ท่อประปา SCG ชั้น13.5 ขนาด 6 นิ้ว", "unit": "ท่อน", "price": 2460.00, "mat_code": "", "needs_review": false },
-
-    { "material_type": "ท่อเกษตร", "size": "3/4\"",   "class": "เกษตร", "name": "PVC ท่อเกษตร NPI เทา ขนาด 3/4 นิ้ว",   "unit": "ท่อน", "price": 41.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อเกษตร", "size": "1 1/2\"", "class": "เกษตร", "name": "PVC ท่อเกษตร NPI เทา ขนาด 1 1/2 นิ้ว", "unit": "ท่อน", "price": 84.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อเกษตร", "size": "2\"",     "class": "เกษตร", "name": "PVC ท่อเกษตร NPI เทา ขนาด 2 นิ้ว",     "unit": "ท่อน", "price": 121.50, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อเกษตร", "size": "2 1/2\"", "class": "เกษตร", "name": "PVC ท่อเกษตร NPI เทา ขนาด 2 1/2 นิ้ว", "unit": "ท่อน", "price": 190.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ท่อเกษตร", "size": "3\"",     "class": "เกษตร", "name": "PVC ท่อเกษตร NPI เทา ขนาด 3 นิ้ว",     "unit": "ท่อน", "price": 276.00, "mat_code": "", "needs_review": false },
-
-    { "material_type": "หัวสปริงเกอร์", "size": "-", "class": "-", "name": "หัวสปริงเกอร์มินิ", "unit": "หัว", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "ข้องอ90ลด", "size": "3/4x1/2\"", "class": "-", "name": "ข้องอ 90° ลด-หนา ฟ้า 3/4x1/2 นิ้ว", "unit": "ชิ้น", "price": 6.00, "mat_code": "", "needs_review": false },
-    { "material_type": "วาล์วหรี่เกลียวนอก", "size": "1/2\"", "class": "-", "name": "วาล์วหรี่เกลียวนอก เกษตร 1/2 นิ้ว", "unit": "ชิ้น", "price": 12.00, "mat_code": "", "needs_review": true },
-
-    { "material_type": "ข้องอ45", "size": "2\"", "class": "-", "name": "ข้องอ 45° ฟ้า 2 นิ้ว", "unit": "ชิ้น", "price": 48.05, "mat_code": "", "needs_review": false },
-    { "material_type": "ข้องอ45", "size": "4\"", "class": "-", "name": "ข้องอ 45° ฟ้า 4 นิ้ว", "unit": "ชิ้น", "price": 279.00, "mat_code": "", "needs_review": false },
-    { "material_type": "ข้องอ45", "size": "6\"", "class": "-", "name": "ข้องอ 45° ฟ้า 6 นิ้ว", "unit": "ชิ้น", "price": 1990.00, "mat_code": "", "needs_review": false },
-    { "material_type": "บอลวาล์ว", "size": "2\"", "class": "-", "name": "บอลวาล์วฟ้า 2 นิ้ว", "unit": "ชิ้น", "price": 203.30, "mat_code": "", "needs_review": false },
-    { "material_type": "บอลวาล์ว", "size": "4\"", "class": "-", "name": "บอลวาล์วฟ้า 4 นิ้ว", "unit": "ชิ้น", "price": 1545.00, "mat_code": "", "needs_review": false },
-    { "material_type": "บอลวาล์ว", "size": "6\"", "class": "-", "name": "บอลวาล์วฟ้า 6 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "รัดแยก", "size": "2\"", "class": "-", "name": "รัดแยก (Saddle) 2 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "รัดแยก", "size": "4\"", "class": "-", "name": "รัดแยก (Saddle) 4 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "รัดแยก", "size": "6\"", "class": "-", "name": "รัดแยก (Saddle) 6 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "แอร์วาล์ว", "size": "2\"", "class": "-", "name": "แอร์วาล์ว 2 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "แอร์วาล์ว", "size": "4\"", "class": "-", "name": "แอร์วาล์ว 4 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "แอร์วาล์ว", "size": "6\"", "class": "-", "name": "แอร์วาล์ว 6 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-    { "material_type": "สี่ทางฝาครอบ", "size": "2\"", "class": "-", "name": "สี่ทางฝาครอบ-เกษตร เทา 2 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true },
-
-    { "material_type": "สามทางลด", "size": "4x3/4\"", "class": "เกษตร", "name": "สามทางลด-เกษตร เทา 4x3/4 นิ้ว", "unit": "ชิ้น", "price": 18.80, "mat_code": "", "needs_review": true },
-    { "material_type": "ข้องอ90ลด", "size": "4x3/4\"", "class": "เกษตร", "name": "ข้องอ 90° ลด-เกษตร เทา 4x3/4 นิ้ว", "unit": "ชิ้น", "price": 0, "mat_code": "", "needs_review": true }
+    {
+      "material_type": "ท่อประปา",
+      "size": "1/2\"",
+      "class": "8.5",
+      "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 1/2 นิ้ว",
+      "unit": "ท่อน",
+      "price": 50.5,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อประปา",
+      "size": "2\"",
+      "class": "8.5",
+      "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 2 นิ้ว",
+      "unit": "ท่อน",
+      "price": 216.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อประปา",
+      "size": "3\"",
+      "class": "8.5",
+      "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 3 นิ้ว",
+      "unit": "ท่อน",
+      "price": 474.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อประปา",
+      "size": "4\"",
+      "class": "8.5",
+      "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 4 นิ้ว",
+      "unit": "ท่อน",
+      "price": 768.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อประปา",
+      "size": "6\"",
+      "class": "8.5",
+      "name": "PVC ท่อประปา SCG ชั้น8.5 ขนาด 6 นิ้ว",
+      "unit": "ท่อน",
+      "price": 1630.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อประปา",
+      "size": "4\"",
+      "class": "13.5",
+      "name": "PVC ท่อประปา SCG ชั้น13.5 ขนาด 4 นิ้ว",
+      "unit": "ท่อน",
+      "price": 1160.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อประปา",
+      "size": "6\"",
+      "class": "13.5",
+      "name": "PVC ท่อประปา SCG ชั้น13.5 ขนาด 6 นิ้ว",
+      "unit": "ท่อน",
+      "price": 2460.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อเกษตร",
+      "size": "3/4\"",
+      "class": "เกษตร",
+      "name": "PVC ท่อเกษตร NPI เทา ขนาด 3/4 นิ้ว",
+      "unit": "ท่อน",
+      "price": 41.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อเกษตร",
+      "size": "1 1/2\"",
+      "class": "เกษตร",
+      "name": "PVC ท่อเกษตร NPI เทา ขนาด 1 1/2 นิ้ว",
+      "unit": "ท่อน",
+      "price": 84.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อเกษตร",
+      "size": "2\"",
+      "class": "เกษตร",
+      "name": "PVC ท่อเกษตร NPI เทา ขนาด 2 นิ้ว",
+      "unit": "ท่อน",
+      "price": 121.5,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อเกษตร",
+      "size": "2 1/2\"",
+      "class": "เกษตร",
+      "name": "PVC ท่อเกษตร NPI เทา ขนาด 2 1/2 นิ้ว",
+      "unit": "ท่อน",
+      "price": 190.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ท่อเกษตร",
+      "size": "3\"",
+      "class": "เกษตร",
+      "name": "PVC ท่อเกษตร NPI เทา ขนาด 3 นิ้ว",
+      "unit": "ท่อน",
+      "price": 276.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "หัวสปริงเกอร์",
+      "size": "-",
+      "class": "-",
+      "name": "หัวสปริงเกอร์มินิ",
+      "unit": "หัว",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "ข้องอ90ลด",
+      "size": "3/4x1/2\"",
+      "class": "-",
+      "name": "ข้องอ 90° ลด-หนา ฟ้า 3/4x1/2 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 6.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "วาล์วหรี่เกลียวนอก",
+      "size": "1/2\"",
+      "class": "-",
+      "name": "วาล์วหรี่เกลียวนอก เกษตร 1/2 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 12.0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "ข้องอ45",
+      "size": "2\"",
+      "class": "-",
+      "name": "ข้องอ 45° ฟ้า 2 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 48.05,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ข้องอ45",
+      "size": "4\"",
+      "class": "-",
+      "name": "ข้องอ 45° ฟ้า 4 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 279.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "ข้องอ45",
+      "size": "6\"",
+      "class": "-",
+      "name": "ข้องอ 45° ฟ้า 6 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 1990.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "บอลวาล์ว",
+      "size": "2\"",
+      "class": "-",
+      "name": "บอลวาล์วฟ้า 2 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 203.3,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "บอลวาล์ว",
+      "size": "4\"",
+      "class": "-",
+      "name": "บอลวาล์วฟ้า 4 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 1545.0,
+      "mat_code": "",
+      "needs_review": false
+    },
+    {
+      "material_type": "บอลวาล์ว",
+      "size": "6\"",
+      "class": "-",
+      "name": "บอลวาล์วฟ้า 6 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "รัดแยก",
+      "size": "2\"",
+      "class": "-",
+      "name": "รัดแยก (Saddle) 2 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "รัดแยก",
+      "size": "4\"",
+      "class": "-",
+      "name": "รัดแยก (Saddle) 4 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "รัดแยก",
+      "size": "6\"",
+      "class": "-",
+      "name": "รัดแยก (Saddle) 6 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "แอร์วาล์ว",
+      "size": "2\"",
+      "class": "-",
+      "name": "แอร์วาล์ว 2 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "แอร์วาล์ว",
+      "size": "4\"",
+      "class": "-",
+      "name": "แอร์วาล์ว 4 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "แอร์วาล์ว",
+      "size": "6\"",
+      "class": "-",
+      "name": "แอร์วาล์ว 6 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "สี่ทางฝาครอบ",
+      "size": "2\"",
+      "class": "-",
+      "name": "สี่ทางฝาครอบ-เกษตร เทา 2 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "สามทางลด",
+      "size": "4x3/4\"",
+      "class": "เกษตร",
+      "name": "สามทางลด-เกษตร เทา 4x3/4 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 18.8,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "สามทางวาย",
+      "size": "3/4\"",
+      "class": "เกษตร",
+      "name": "สามทางวาย-เกษตร เทา 3/4 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    },
+    {
+      "material_type": "ข้องอ90ลด",
+      "size": "4x3/4\"",
+      "class": "เกษตร",
+      "name": "ข้องอ 90° ลด-เกษตร เทา 4x3/4 นิ้ว",
+      "unit": "ชิ้น",
+      "price": 0,
+      "mat_code": "",
+      "needs_review": true
+    }
   ]
 }

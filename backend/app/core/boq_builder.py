@@ -119,6 +119,7 @@ def build_boq(
     valve_cluster_distance = settings.get("valve_cluster_distance", 8.0)
     legend_margin = settings.get("legend_margin", 5.0)
     legend_left_extent = settings.get("legend_left_extent", 60.0)
+    entry_type = settings.get("entry_type", "straight")  # "straight" | "y_branch"
 
     warnings: list[dict] = []
     debug_log: list[str] = []
@@ -271,6 +272,16 @@ def build_boq(
                     note=f"ท่อตั้ง {sprinkler_count} หัว x {riser_height} ม.",
                 )
             )
+
+            if entry_type == "y_branch":
+                y_count = sprinkler_count // 2
+                rows.append(
+                    _make_row(
+                        _find_price_item(price_table, "สามทางวาย", '3/4"'),
+                        y_count,
+                        note="แบบ 3 ทางวาย",
+                    )
+                )
 
         # --- ข้อต่อแบบ INSERT (4.5 ก) ------------------------------------
         # ข้อต่อที่ถอดตามเลเยอร์เหล่านี้เป็นข้อต่อลด อิงขนาดท่อย่อย x ท่อเข้าต้น (submain x feeder)

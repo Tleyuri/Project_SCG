@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { APP_VERSION, APP_VERSION_DATE } from "./version";
 import UploadStep from "./components/UploadStep";
-import LayerMappingStep from "./components/LayerMappingStep";
+import LayerMappingStep, { EntryTypeSelector } from "./components/LayerMappingStep";
 import PreviewStep from "./components/PreviewStep";
 import SettingsPanel from "./components/SettingsPanel";
 import { extractBoq, exportBoq, getConfig } from "./api";
@@ -21,6 +21,7 @@ export default function App() {
   const [extracting, setExtracting] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [progressInfo, setProgressInfo] = useState({ pct: 0, label: "" });
+  const [entryType, setEntryType] = useState("straight");
 
   async function handleUploaded(data) {
     setSession(data);
@@ -46,7 +47,7 @@ export default function App() {
     try {
       setProgressInfo({ pct: 60, label: "กำลังถอดวัสดุ..." });
       const result = await extractBoq(session.session_id, {
-        settings,
+        settings: { ...settings, entry_type: entryType },
         layer_mapping: layerMapping ?? resolvedLayerMapping,
       });
       setBoqResult(result);
@@ -126,6 +127,8 @@ export default function App() {
             layerAliases={config.layer_aliases}
             onBack={() => setStep(0)}
             onNext={goToPreview}
+            entryType={entryType}
+            onEntryTypeChange={setEntryType}
           />
         )}
 
@@ -146,6 +149,12 @@ export default function App() {
             <div style={{ fontSize: 12, color: "#6b7280", marginTop: 4, textAlign: "right" }}>
               {progressInfo.pct}%
             </div>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="card" style={{ padding: "16px 20px" }}>
+            <EntryTypeSelector value={entryType} onChange={setEntryType} />
           </div>
         )}
 

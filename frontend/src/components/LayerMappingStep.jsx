@@ -2,7 +2,44 @@ import { useMemo, useState } from "react";
 import { buildSlots, guessAssignments, applyAssignments } from "../utils/layerGuess";
 import { updateLayerMapping } from "../api";
 
-export default function LayerMappingStep({ layers, layerMapping, layerAliases, onBack, onNext }) {
+export function EntryTypeSelector({ value, onChange }) {
+  const options = [
+    { value: "straight", label: "แบบปกติ", desc: "ท่อตรงเข้าหัวสปริงเกอร์ทีละหัว" },
+    { value: "y_branch", label: "แบบ 3 ทางวาย", desc: "แยกซ้าย-ขวา 2 หัวต่อจุด" },
+  ];
+  return (
+    <div style={{ margin: "16px 0" }}>
+      <label style={{ fontWeight: 500, fontSize: 14 }}>รูปแบบท่อเข้าต้น</label>
+      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        {options.map((opt) => (
+          <label
+            key={opt.value}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
+              border: `1px solid ${value === opt.value ? "var(--color-primary, #16a34a)" : "var(--color-border, #d1d5db)"}`,
+              borderRadius: 8, padding: "10px 16px", flex: 1,
+              background: value === opt.value ? "var(--color-primary-light, #f0fdf4)" : "transparent",
+            }}
+          >
+            <input
+              type="radio"
+              name="entry_type"
+              value={opt.value}
+              checked={value === opt.value}
+              onChange={() => onChange(opt.value)}
+            />
+            <div>
+              <div style={{ fontWeight: 500 }}>{opt.label}</div>
+              <div style={{ fontSize: 12, color: "gray" }}>{opt.desc}</div>
+            </div>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function LayerMappingStep({ layers, layerMapping, layerAliases, onBack, onNext, entryType, onEntryTypeChange }) {
   const slots = useMemo(() => buildSlots(layerMapping), [layerMapping]);
   const guesses = useMemo(
     () => guessAssignments(slots, layers, layerAliases),
@@ -126,6 +163,8 @@ export default function LayerMappingStep({ layers, layerMapping, layerAliases, o
           ))}
         </tbody>
       </table>
+
+      <EntryTypeSelector value={entryType} onChange={onEntryTypeChange} />
 
       <div className="toolbar" style={{ marginTop: 16 }}>
         <button className="btn secondary" onClick={onBack}>
