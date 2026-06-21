@@ -176,8 +176,12 @@ def export(session_id: str, req: ExportRequest):
     )
 
     filename = SESSIONS[session_id]["filename"].rsplit(".", 1)[0] + "_BOQ.xlsx"
+    # RFC 5987: ใช้ filename*=UTF-8''<percent-encoded> รองรับชื่อไฟล์ภาษาไทย
+    from urllib.parse import quote
+    encoded = quote(filename, safe="")
+    content_disposition = f"attachment; filename=\"BOQ.xlsx\"; filename*=UTF-8''{encoded}"
     return StreamingResponse(
         io.BytesIO(xlsx_bytes),
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={"Content-Disposition": content_disposition},
     )
